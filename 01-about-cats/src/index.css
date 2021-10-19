@@ -1,0 +1,188 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  font-size: 32px;
+  font-family: 'PT Sans Narrow', sans-serif;
+  background: white;
+  z-index: 99999;
+  border: 1px solid lightgray;
+  border-top: none;
+}
+
+.header:first-letter {
+  color: red;
+}
+
+.header-whitespace {
+  margin-top: 100px;
+}
+
+#body {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.content {
+  min-height: calc(100vh - 100px);
+}
+
+.footer {
+  color: #444;
+  font-family: 'Arial', sans-serif;
+  position: relative;
+  height: 75px;
+}
+
+.mail-icon {
+  vertical-align: middle;
+  height: 15px;
+}
+
+.mail-link {
+  color: #4c4cd8;
+}
+
+.contacts {
+  display: inline-block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.copyright {
+  position: absolute;
+  display: inline-block;
+  bottom: 0;
+  right: 0;
+}
+
+
+.radioinput {
+  display: none;
+}
+
+.catcard {
+  margin: 10px;
+  vertical-align: middle;
+  position: relative;
+  display: inline-block;
+}
+
+.catimg {
+  height: 160px;
+  opacity: 0.7;
+}
+
+.content {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.carousel-whitespace {
+  display: inline-block;
+  /*transition: margin-left .2s;*/
+}
+
+
+.catname {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  font-size: 24px;
+  color: white;
+  visibility: hidden;
+}
+
+
+#cat1:checked ~ .carousel-whitespace {
+  margin-left: calc(50% - 150px);
+}
+#cat2:checked ~ .carousel-whitespace {
+  margin-left: calc(50% - 150px - 1 * 233px);
+}
+#cat3:checked ~ .carousel-whitespace {
+  margin-left: calc(50% - 150px - 2 * 233px);
+}
+#cat4:checked ~ .carousel-whitespace {
+  margin-left: calc(50% - 150px - 3 * 233px);
+}
+
+
+#cat1:checked ~ .catcard:hover .catlabel[for="cat1"] .catimg {
+  filter: brightness(50%);
+}
+#cat2:checked ~ .catcard:hover .catlabel[for="cat2"] .catimg{
+  filter: brightness(50%);
+}
+#cat3:checked ~ .catcard:hover .catlabel[for="cat3"] .catimg {
+  filter: brightness(50%);
+}
+#cat4:checked ~ .catcard:hover .catlabel[for="cat4"] .catimg {
+  filter: brightness(50%);
+}
+
+
+#cat1:checked ~ .catcard:hover .catlabel[for="cat1"] .catname{
+  visibility: visible;
+}
+#cat2:checked ~ .catcard:hover .catlabel[for="cat2"] .catname{
+  visibility: visible;
+}
+#cat3:checked ~ .catcard:hover .catlabel[for="cat3"] .catname{
+  visibility: visible;
+}
+#cat4:checked ~ .catcard:hover .catlabel[for="cat4"] .catname{
+  visibility: visible;
+}
+
+#cat1:checked ~ .catcard .catlabel[for="cat1"] .catimg {
+  height: 200px;
+  opacity: 1;
+}
+#cat2:checked ~ .catcard .catlabel[for="cat2"] .catimg {
+  height: 200px;
+  opacity: 1;
+}
+#cat3:checked ~ .catcard .catlabel[for="cat3"] .catimg {
+  height: 200px;
+  opacity: 1;
+}
+#cat4:checked ~ .catcard .catlabel[for="cat4"] .catimg {
+  height: 200px;
+  opacity: 1;
+}
+
+.carousel-nav {
+  width: 100%;
+  text-align: center;
+  font-size: 40px;
+  color: lightgray;
+}
+
+#cat1:checked ~ .carousel-nav .nav-label[for="cat1"] {
+  color: gray;
+}
+#cat2:checked ~ .carousel-nav .nav-label[for="cat2"] {
+  color: gray;
+}
+#cat3:checked ~ .carousel-nav .nav-label[for="cat3"] {
+  color: gray;
+}
+#cat4:checked ~ .carousel-nav .nav-label[for="cat4"] {
+  color: gray;
+}
+
