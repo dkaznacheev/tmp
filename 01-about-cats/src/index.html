@@ -13,43 +13,107 @@
   <div class="content">
     <div class="header-whitespace"></div>
     <br>
-    <input type="radio" class="radioinput" name="cats" id="cat1" checked/>
-    <input type="radio" class="radioinput" name="cats" id="cat2"/>
-    <input type="radio" class="radioinput" name="cats" id="cat3"/>
-    <input type="radio" class="radioinput" name="cats" id="cat4"/>
-    <div class="carousel-whitespace"></div>
 
-    <div class="catcard">
-    <label for="cat1" class="catlabel">
-        <img src="../media/cat1.jpg" class="catimg"/>
-        <span class="catname">Вася</span>
-    </label>
+    <div class="modal modal1" id="modal1">
+      <div class="modalcenter">
+        <img src="../media/cat1.jpg" class="modalimg"/>
+        <a href="#cat1" class="close">X</a>
+        <div class="modalcontent">
+          <h1 class="modaltext">Вася</h1>
+          <text class="modaltext">
+Дружелюбный, ласковый, ручной. <br>
+Возраст ~6 месяцев.<br>
+С другими котами в дружных отношениях, можно взять в пару к домашнему питомцу.
+          </text>
+        </div>
+      </div>
     </div>
-    <div class="catcard">
-      <label for="cat2" class="catlabel">
-        <img src="../media/cat2.jpg" class="catimg"/>
-        <span class="catname">Мурзик</span>
-      </label>
+    <div class="modal modal2" id="modal2">
+      <div class="modalcenter">
+        <img src="../media/cat2.jpg" class="modalimg"/>
+        <a href="#cat2" class="close">X</a>
+        <div class="modalcontent">
+          <h1 class="modaltext">Мурзик</h1>
+          <p class="modaltext">
+Дружелюбный, ласковый, ручной. <br>
+Возраст ~6 месяцев.<br>
+С другими котами в дружных отношениях, можно взять в пару к домашнему питомцу.
+          </p>
+        </div>
+      </div>
     </div>
-    <div class="catcard">
-      <label for="cat3" class="catlabel">
-        <img src="../media/cat3.jpg" class="catimg"/>
-        <span class="catname">Пушок</span>
-      </label>
+    <div class="modal modal3" id="modal3">
+      <div class="modalcenter">
+        <img src="../media/cat3.jpg" class="modalimg"/>
+        <a href="#cat3" class="close">X</a>
+        <div class="modalcontent">
+          <h1 class="modaltext">Пушок</h1>
+          <p class="modaltext">
+Дружелюбный, ласковый, ручной. <br>
+Возраст ~6 месяцев.<br>
+С другими котами в дружных отношениях, можно взять в пару к домашнему питомцу.
+          </p>
+        </div>
+      </div>
     </div>
-    <div class="catcard">
-      <label for="cat4" class="catlabel">
-        <img src="../media/cat4.jpg" class="catimg"/>
-        <span class="catname">Геннадий <br> Петрович</span>
-      </label>
+    <div class="modal modal4" id="modal4">
+      <div class="modalcenter">
+        <img src="../media/cat4.jpg" class="modalimg"/>
+        <a href="#cat4" class="close">X</a>
+        <div class="modalcontent">
+          <h1 class="modaltext">Геннадий Петрович</h1>
+          <p class="modaltext">
+Дружелюбный, ласковый, ручной. <br>
+Возраст ~48 лет.<br>
+В дружных отношениях с неизолированными элементами проводки.
+          </p>
+        </div>
+      </div>
     </div>
-    <aside class="carousel-nav">
-      <br>
-      <label for="cat1" class="nav-label">●</label>
-      <label for="cat2" class="nav-label">●</label>
-      <label for="cat3" class="nav-label">●</label>
-      <label for="cat4" class="nav-label">●</label>
-    </aside>
+
+    <div id="cat1"><div id="cat2"><div id="cat3"><div id="cat4">
+
+      <div class="carousel-whitespace"></div>
+      <div class="catcard">
+        <a href="#cat1">
+          <img src="../media/cat1.jpg" class="catimg img1"/>
+          <a href="#modal1" class="catname name1">
+            <span class="nametext">Вася</span>
+          </a>
+        </a>
+      </div>
+      <div class="catcard">
+        <a href="#cat2">
+          <img src="../media/cat2.jpg" class="catimg img2"/>
+          <a href="#modal2" class="catname name2">
+            <span class="nametext">Мурзик</span>
+          </a>
+        </a>
+      </div>
+      <div class="catcard">
+        <a href="#cat3">
+          <img src="../media/cat3.jpg" class="catimg img3"/>
+          <a href="#modal3" class="catname name3">
+            <span class="nametext">Пушок</span>
+          </a>
+        </a>
+      </div>
+      <div class="catcard">
+        <a href="#cat4">
+          <img src="../media/cat4.jpg" class="catimg img4"/>
+          <a href="#modal4" class="catname name4">
+            <span class="nametext">Геннадий <br> Петрович</span>
+          </a>
+        </a>
+      </div>
+      <aside class="carousel-nav">
+        <a href="#cat1" class="nav-label nav1">●</a>
+        <a href="#cat2" class="nav-label nav2">●</a>
+        <a href="#cat3" class="nav-label nav3">●</a>
+        <a href="#cat4" class="nav-label nav4">●</a>
+      </aside>
+    </div></div></div></div>
+
   </div>
   <footer class="footer">
     <p class="contacts">
