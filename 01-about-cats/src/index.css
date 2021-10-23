@@ -78,7 +78,7 @@
 }
 
 .catimg {
-  height: 160px;
+  height: 320px;
   opacity: 0.7;
 }
 
@@ -89,7 +89,7 @@
 
 .carousel-whitespace {
   display: inline-block;
-  transition: margin-left .5s;
+  transition: margin-left .25s;
 }
 
 
@@ -102,7 +102,7 @@
   width: 100%;
   height: 100%;
   font-family: 'Arial', sans-serif;
-  font-size: 24px;
+  font-size: 48px;
   color: white;
   visibility: hidden;
 }
@@ -116,68 +116,73 @@
   text-align: center;
 }
 
-.modal2:not(:target) ~ .modal3:not(:target) ~ .modal4:not(:target) ~ #cat1 #cat2:not(:target) #cat3:not(:target) #cat4:not(:target) .carousel-whitespace {
-  margin-left: calc(50% - 150px);
+.modal2:not(:target) ~ .modal3:not(:target) ~ .modal4:not(:target) ~ .cat1 .cat2:not(:target) .cat3:not(:target) .cat4:not(:target) .carousel-whitespace {
+  margin-left: calc(50% - 300px);
 }
-#cat1:target .carousel-whitespace {
-  margin-left: calc(50% - 150px);
+.cat1:target .carousel-whitespace {
+  margin-left: calc(50% - 300px);
 }
-#cat2:target .carousel-whitespace {
-  margin-left: calc(50% - 150px - 1 * 233px);
+.cat2:target .carousel-whitespace {
+  margin-left: calc(50% - 300px - 1 * 466px);
 }
-#cat3:target .carousel-whitespace {
-  margin-left: calc(50% - 150px - 2 * 233px);
+.cat3:target .carousel-whitespace {
+  margin-left: calc(50% - 300px - 2 * 466px);
 }
-#cat4:target .carousel-whitespace {
-  margin-left: calc(50% - 150px - 3 * 233px);
+.cat4:target .carousel-whitespace {
+  margin-left: calc(50% - 300px - 3 * 466px);
 }
 
-
-#cat1:target .catcard:hover .img1 {
+.modal2:not(:target) ~ .modal3:not(:target) ~ .modal4:not(:target) ~ .cat1 .cat2:not(:target) .cat3:not(:target) .cat4:not(:target) .catcard:hover .img1 {
   filter: brightness(50%);
 }
-#cat2:target .catcard:hover .img2 {
+.cat1:target .catcard:hover .img1 {
   filter: brightness(50%);
 }
-#cat3:target .catcard:hover .img3 {
+.cat2:target .catcard:hover .img2 {
   filter: brightness(50%);
 }
-#cat4:target .catcard:hover .img4 {
+.cat3:target .catcard:hover .img3 {
+  filter: brightness(50%);
+}
+.cat4:target .catcard:hover .img4 {
   filter: brightness(50%);
 }
 
-#cat1:target .catcard:hover .name1{
+.modal2:not(:target) ~ .modal3:not(:target) ~ .modal4:not(:target) ~ .cat1 .cat2:not(:target) .cat3:not(:target) .cat4:not(:target) .catcard:hover .name1{
   visibility: visible;
 }
-#cat2:target .catcard:hover .name2{
+.cat1:target .catcard:hover .name1{
   visibility: visible;
 }
-#cat3:target .catcard:hover .name3{
+.cat2:target .catcard:hover .name2{
   visibility: visible;
 }
-#cat4:target .catcard:hover .name4{
+.cat3:target .catcard:hover .name3{
+  visibility: visible;
+}
+.cat4:target .catcard:hover .name4{
   visibility: visible;
 }
 
 
-.modal2:not(:target) ~ .modal3:not(:target) ~ .modal4:not(:target) ~ #cat1 #cat2:not(:target) #cat3:not(:target) #cat4:not(:target) .img1 {
-  height: 200px;
+.modal2:not(:target) ~ .modal3:not(:target) ~ .modal4:not(:target) ~ .cat1 .cat2:not(:target) .cat3:not(:target) .cat4:not(:target) .img1 {
+  height: 400px;
   opacity: 1;
 }
-#cat1:target .img1 {
-  height: 200px;
+.cat1:target .img1 {
+  height: 400px;
   opacity: 1;
 }
-#cat2:target .img2 {
-  height: 200px;
+.cat2:target .img2 {
+  height: 400px;
   opacity: 1;
 }
-#cat3:target .img3 {
-  height: 200px;
+.cat3:target .img3 {
+  height: 400px;
   opacity: 1;
 }
-#cat4:target .img4 {
-  height: 200px;
+.cat4:target .img4 {
+  height: 400px;
   opacity: 1;
 }
 
@@ -192,20 +197,20 @@
   color: lightgray;
 }
 
-#cat2:not(:target) #cat3:not(:target) #cat4:not(:target) .nav1 {
+.cat2:not(:target) .cat3:not(:target) .cat4:not(:target) .nav1 {
   color: gray;
 }
 
-#cat1:target .nav1 {
+.cat1:target .nav1 {
   color: gray;
 }
-#cat2:target .nav2 {
+.cat2:target .nav2 {
   color: gray;
 }
-#cat3:target .nav3 {
+.cat3:target .nav3 {
   color: gray;
 }
-#cat4:target .nav4 {
+.cat4:target .nav4 {
   color: gray;
 }
 
@@ -226,16 +231,16 @@
   background-color: rgba(0,0,0,0.7);
 }
 
-#modal1:target {
+.modal1:target {
   visibility: visible;
 }
-#modal2:target {
+.modal2:target {
   visibility: visible;
 }
-#modal3:target {
+.modal3:target {
   visibility: visible;
 }
-#modal4:target {
+.modal4:target {
   visibility: visible;
 }
 
@@ -248,20 +253,20 @@
 }
 
 .modalimg {
-  width: 420px;
+  width: 650px;
 }
 
 .modalcontent {
   position: absolute;
   top: 0;
   right: 0;
-  width: 200px;
+  width: 300px;
 }
 
 .modalcenter {
-  width: 650px;
+  width: 1000px;
   margin: 0 auto;
-  transform: translateY(50%);
+  transform: translateY(calc(50% - 100px));
   position: relative;
 }
 
@@ -276,45 +281,45 @@
   right: 0;
 }
 
-#modal1:target ~ #cat1 .img1 {
-  height: 200px;
+.modal1:target ~ .cat1 .img1 {
+  height: 400px;
   opacity: 1;
 }
-#modal2:target ~ #cat1 .img2{
-  height: 200px;
+.modal2:target ~ .cat1 .img2{
+  height: 400px;
   opacity: 1;
 }
-#modal3:target ~ #cat1 .img3 {
-  height: 200px;
+.modal3:target ~ .cat1 .img3 {
+  height: 400px;
   opacity: 1;
 }
-#modal4:target ~ #cat1 .img4 {
-  height: 200px;
+.modal4:target ~ .cat1 .img4 {
+  height: 400px;
   opacity: 1;
 }
 
-#modal1:target ~ #cat1 .carousel-whitespace {
-  margin-left: calc(50% - 150px);
+.modal1:target ~ .cat1 .carousel-whitespace {
+  margin-left: calc(50% - 300px);
 }
-#modal2:target ~ #cat1 .carousel-whitespace {
-  margin-left: calc(50% - 150px - 1 * 233px);
+.modal2:target ~ .cat1 .carousel-whitespace {
+  margin-left: calc(50% - 300px - 1 * 466px);
 }
-#modal3:target ~ #cat1 .carousel-whitespace {
-  margin-left: calc(50% - 150px - 2 * 233px);
+.modal3:target ~ .cat1 .carousel-whitespace {
+  margin-left: calc(50% - 300px - 2 * 466px);
 }
-#modal4:target ~ #cat1 .carousel-whitespace {
-  margin-left: calc(50% - 150px - 3 * 233px);
+.modal4:target ~ .cat1 .carousel-whitespace {
+  margin-left: calc(50% - 300px - 3 * 466px);
 }
 
-#modal1:target ~ #cat1 .nav1 {
+.modal1:target ~ .cat1 .nav1 {
   color: gray;
 }
-#modal2:target ~ #cat1 .nav2 {
+.modal2:target ~ .cat1 .nav2 {
   color: gray;
 }
-#modal3:target ~ #cat1 .nav3 {
+.modal3:target ~ .cat1 .nav3 {
   color: gray;
 }
-#modal4:target ~ #cat1 .nav4 {
+.modal4:target ~ .cat1 .nav4 {
   color: gray;
 }
