@@ -1,222 +1,197 @@
 'use strict';
 
-/**
- * Телефонная книга
- */
-const phoneBook = new Map();
+const re = /(.{2}) (\d{2}):(\d{2})\+(\d{1,2})/
+const week = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС']
+const weekBase = 60 * 24;
 
-/**
- * Вызывайте эту функцию, если есть синтаксическая ошибка в запросе
- * @param {number} lineNumber – номер строки с ошибкой
- * @param {number} charNumber – номер символа, с которого запрос стал ошибочным
- */
-function syntaxError(lineNumber, charNumber) {
-    throw new Error(`SyntaxError: Unexpected token at ${lineNumber}:${charNumber}`);
+function toInstant(time) {
+    const m = re.exec(time);
+    let inst = 0;
+    inst += week.indexOf(m[1]) * weekBase;
+    inst += parseInt(m[2]) * 60;
+    inst += parseInt(m[3]);
+    inst -= parseInt(m[4]) * 60;
+    return inst;
 }
 
-function parsePhonesAndMails(line) {
-    let parts = line.split(' для контакта ');
-    if (parts.length < 2) {
-        return line.length - 1;
-    }
-    let phones = [];
-    let emails = [];
-
-    let fields = parts[0].split(' и ');
-    for (let field of fields) {
-        let sp = field.split(' ');
-        if (sp.length !== 2) {
-            return 0;
-        }
-        switch (sp[0]) {
-            case 'телефон':
-                let phone = sp[1];
-                if (!(/\d{10}/.test(phone))) {
-                    return 0;
-                }
-                phones.push(phone);
-                break;
-            case 'почту':
-                emails.push(sp[1]);
-                break;
-            default:
-                return 0;
-        }
-    }
-    return { name: parts[1], phones: phones, emails: emails}
+function padZero(num) {
+    return ('0' + num).slice(-2);
 }
 
-function parseShow(lineNum, line) {
-    let parts = line.split(' для контактов, где есть ');
-    if (parts.length < 2) {
-        syntaxError(lineNum, line.length - 1 + 'Покажи '.length);
-    }
-    let fields = parts[0].split(' и ');
-    let fn = 0;
-    let res = [];
-    for (let field of fields) {
-        switch (field) {
-            case 'имя':
-                res.push("NAME");
-                break;
-            case 'телефоны':
-                res.push("PHONES");
-                break;
-            case 'почты':
-                res.push("EMAILS");
-                break;
-            default:
-                syntaxError(lineNum, parts.slice(0, fn).reduce((a, b) => a + b, '').length + 'Покажи '.length);
-                break;
-        }
-        fn++;
-    }
-    return { fields: res, where: parts[1] };
+function formatInstant(inst, template, timezone) {
+    const adjusted = inst + timezone * 60;
+    return template
+        .replace("%DD", week[Math.floor(adjusted / weekBase)])
+        .replace("%HH", padZero(Math.floor((adjusted % weekBase) / 60)))
+        .replace("%MM", padZero(adjusted % 60));
 }
 
-function parse(query) {
-    let lines = query.split(';');
-    lines = lines.slice(0, -1);
-    let lineNum = 0;
-    let queries = [];
-    for (let line of lines) {
-        lineNum++;
-        if (/^Создай контакт /.test(line)) {
-            queries.push({ type: 'CREATE', name: line.substr('Создай контакт '.length)});
-            continue;
-        }
-        if (/^Удали контакт /.test(line)) {
-            queries.push({ type: 'DELETE_NAME', name: line.substr('Удали контакт '.length)});
-            continue;
-        }
-        if (/^Удали контакты, где есть /.test(line)) {
-            queries.push({ type: 'DELETE_WHERE', substr: line.substr('Удали контакты, где есть '.length)});
-            continue;
-        }
-        if (/^Добавь /.test(line)) {
-            let parsed = parsePhonesAndMails(line.substr('Добавь '.length));
-            if (typeof parsed === 'number') {
-                syntaxError(lineNum, parsed + 'Добавь '.length)
-            }
-            parsed.type = 'ADD_INFO';
-            queries.push(parsed);
-            continue;
-        }
-        if (/^Удали /.test(line)) {
-            let parsed = parsePhonesAndMails(line.substr('Удали '.length));
-            if (typeof parsed === 'number') {
-                syntaxError(lineNum, parsed + 'Удали '.length)
-            }
-            parsed.type = 'DELETE_INFO';
-            queries.push(parsed);
-            continue;
-        }
-        if (/^Покажи /.test(line)) {
-            let parsed = parseShow(lineNum, line.substr('Покажи '.length));
-            parsed.type = 'SHOW';
-            queries.push(parsed);
-            continue;
-        }
-        syntaxError(lineNum, 0);
-    }
-    return queries;
-}
-
-function phoneFormat(phone) {
-    return `+7 (${phone.substring(0,3)}) ${phone.substring(3,6)}-${phone.substring(6,8)}-${phone.substring(8,10)}`;
-}
 
 /**
- * Выполнение запроса на языке pbQL
- * @param {string} query
- * @returns {string[]} - строки с результатами запроса
+ * @param {Object} schedule Расписание Банды
+ * @param {number} duration Время на ограбление в минутах
+ * @param {Object} workingHours Время работы банка
+ * @param {string} workingHours.from Время открытия, например, "10:00+5"
+ * @param {string} workingHours.to Время закрытия, например, "18:00+5"
+ * @returns {Object}
  */
-function run(query) {
-    let queries = parse(query)
+function getAppropriateMoment(schedule, duration, workingHours) {
+    let times = [0, 1, 2].map((n) => {
+        return {
+            personId: n,
+            time: -weekBase,
+            action: 1
+        };
+    });
+
+    function addTimes(person, personId) {
+        const pm = personId === 3 ? -1 : 1;
+        for (const range of person) {
+            times.push({personId: personId, time: toInstant(range.from), action: -1 * pm});
+            times.push({personId: personId, time: toInstant(range.to), action: 1 * pm});
+        }
+    }
+
+    addTimes(schedule.Danny, 0);
+    addTimes(schedule.Rusty, 1);
+    addTimes(schedule.Linus, 2);
+    addTimes(week.slice(0, 3).map((day) => {
+        return {
+            from: day + ' ' + workingHours.from,
+            to: day + ' ' + workingHours.to
+        };
+    }), 3);
+    let bankZone = parseInt(workingHours.from.split('+')[1]);
+    times.sort((t1, t2) =>
+        t1.time === t2.time ? t2.action - t1.action : t1.time - t2.time
+    );
+    const map = new Map();
+    map[0] = 0;
+    map[1] = 0;
+    map[2] = 0;
+    map[3] = 0;
+
+    function isActive() {
+        return map[0] > 0 && map[1] > 0 && map[2] > 0 && map[3] > 0;
+    }
+
+    let startTime = null;
     let results = [];
-    for (let query of queries) {
-        switch (query.type) {
-            case 'CREATE':
-                if (phoneBook.has(query.name)) {
-                    break;
-                }
-                phoneBook.set(query.name, { phones: [], emails: []});
-                break;
-            case 'DELETE_NAME':
-                if (phoneBook.has(query.name)) {
-                    phoneBook.delete(query.name);
-                }
-                break;
-            case 'DELETE_WHERE':
-                if (query.where === '') break;
-                phoneBook.forEach((value, key) => {
-                    if (key.includes(query.where)) {
-                        phoneBook.delete(key);
-                    }
-                });
-                break;
-            case 'ADD_INFO':
-                if (!phoneBook.has(query.name)) {
-                    break;
-                }
-                let entry = phoneBook.get(query.name)
-                for (let phone of query.phones) {
-                    if (!entry.phones.includes(phone)) {
-                        entry.phones.push(phone);
-                    }
-                }
-                for (let phone of query.emails) {
-                    if (!entry.emails.includes(phone)) {
-                        entry.emails.push(phone);
-                    }
-                }
-                break;
-            case 'DELETE_INFO':
-                if (!phoneBook.has(query.name)) {
-                    break;
-                }
-                let entryD = phoneBook.get(query.name)
-                for (let phone of query.phones) {
-                    let index = entryD.phones.indexOf(phone);
-                    if (index > -1) {
-                        entryD.phones.splice(index, 1);
-                    }
-                }
-                for (let email of query.emails) {
-                    let index = entryD.emails.indexOf(email);
-                    if (index > -1) {
-                        entryD.emails.splice(index, 1);
-                    }
-                }
-                break;
-            case 'SHOW':
-                phoneBook.forEach((value, key) => {
-                    if (key.includes(query.where)) {
-                        let result = [];
-                        for (let field of query.fields) {
-                            switch (field) {
-                                case 'NAME':
-                                    result.push(key);
-                                    break;
-                                case 'PHONES':
-                                    let phonesFormatted = [];
-                                    for (let phone of value.phones) {
-                                        phonesFormatted.push(phoneFormat(phone));
-                                    }
-                                    result.push(phonesFormatted.join(','))
-                                    break;
-                                case 'EMAILS':
-                                    result.push(value.emails.join(','));
-                                    break;
-                            }
-                        }
-                        results.push(result.join(';'));
-                    }
-                });
-                break;
+    for (const event of times) {
+        let wasActive = isActive()
+        map[event.personId] += event.action;
+        if (!wasActive && isActive()) {
+            startTime = event.time;
+        }
+        if (wasActive && !isActive() && event.time - startTime >= duration) {
+            results.push({from: startTime, to: event.time});
         }
     }
-    return results;
+    let answer = results.length === 0 ? null : { index: 0, offset: 0 };
+
+    return {
+        /**
+         * Найдено ли время
+         * @returns {boolean}
+         */
+        exists() {
+            return answer != null;
+        },
+
+        /**
+         * Возвращает отформатированную строку с часами
+         * для ограбления во временной зоне банка
+         *
+         * @param {string} template
+         * @returns {string}
+         *
+         * @example
+         * ```js
+         * getAppropriateMoment(...).format('Начинаем в %HH:%MM (%DD)') // => Начинаем в 14:59 (СР)
+         * ```
+         */
+        format(template) {
+            if (answer == null) {
+                return "";
+            }
+            return formatInstant(results[answer.index].from + answer.offset, template, bankZone);
+        },
+
+        /**
+         * Попробовать найти часы для ограбления позже [*]
+         * @note Не забудь при реализации выставить флаг `isExtraTaskSolved`
+         * @returns {boolean}
+         */
+        tryLater() {
+            if (answer == null) {
+                return false;
+            }
+            if (results[answer.index].to - results[answer.index].from - answer.offset - 30 >= duration) {
+                answer.offset += 30;
+                return true;
+            }
+            if (answer.index >= results.length - 1) {
+                return false;
+            }
+            answer.index++;
+            answer.offset = 0;
+            return true;
+        }
+    };
 }
 
-module.exports = { phoneBook, run };
+module.exports = {
+    getAppropriateMoment
+};
+
+const gangSchedule = {
+    Danny: [/*{ from: 'ПН 12:00+5', to: 'ПН 17:00+5' }, { from: 'ВТ 13:00+5', to: 'ВТ 16:00+5' }*/],
+    Rusty: [/*{ from: 'ПН 11:30+5', to: 'ПН 16:30+5' }, { from: 'ВТ 13:00+5', to: 'ВТ 16:00+5' }*/],
+    Linus: [
+/*        { from: 'ПН 09:00+3', to: 'ПН 14:00+3' },
+        { from: 'ПН 21:00+3', to: 'ВТ 09:30+3' },
+        { from: 'СР 09:30+3', to: 'СР 15:00+3' }*/
+    ]
+};
+
+const bankWorkingHours = {
+    from: '00:00+5',
+    to: '23:59+5'
+};
+
+// Время не существует
+const longMoment = getAppropriateMoment(gangSchedule, 121, bankWorkingHours);
+
+// Выведется `false` и `""`
+console.info(longMoment.exists());
+console.info(longMoment.format('Метим на %DD, старт в %HH:%MM!'));
+
+// Время существует
+const moment = getAppropriateMoment(gangSchedule, 90, bankWorkingHours);
+
+// Выведется `true` и `"Метим на ВТ, старт в 11:30!"`
+console.info(moment.exists());
+console.info(moment.format('Метим на %DD, старт в %HH:%MM!'));
+
+moment.tryLater();
+// `"ВТ 16:00"`
+console.info(moment.format('%DD %HH:%MM'));
+
+// Вернет `true`
+moment.tryLater();
+// `"ВТ 16:30"`
+console.info(moment.format('%DD %HH:%MM'));
+
+// Вернет `true`
+moment.tryLater();
+// `"СР 10:00"`
+console.info(moment.format('%DD %HH:%MM'));
+
+// Вернет `false`
+console.log(moment.tryLater());
+// `"СР 10:00"`
+console.info(moment.format('%DD %HH:%MM'));
+
+while (moment.tryLater()) {
+    console.info(moment.format('%DD %HH:%MM'));
+}

@@ -1,0 +1,104 @@
+.main {
+  display: grid;
+  grid-template-columns: 1fr 5fr 1fr;
+  grid-template-rows: 10vw auto 1fr;
+  width: 100vw;
+  height: 100vh;
+  row-gap: 20px;
+}
+
+.header {
+  width: 100%;
+  padding: 10px;
+  font-size: 5vw;
+  background: #333;
+  color: lightgray;
+  grid-row: 1 / 1;
+  grid-column: 1 / -1;
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  height: 4em;
+}
+
+.pig-view {
+  grid-row: 2 / 2;
+  grid-column: 2 / 2;
+  aspect-ratio: 1;
+  display: flex;
+}
+
+.pig-pic {
+  object-fit: cover;
+  width: 100%;
+}
+.bg-pic {
+  grid-row: 2 / 2;
+  grid-column: 2 / 2;
+  object-fit: cover;
+  width: 100%;
+  align-self: end;
+}
+
+.buttons {
+  grid-row: 3 / 3;
+  grid-column: 2 / 2;
+  display: flex;
+  justify-content: space-around;
+}
+
+.pig-text {
+  grid-row: 2 / 2;
+  grid-column: 2 / 2;
+  align-self: end;
+  color: white;
+  font-size: 3.5vw;
+  margin-left: 1em;
+  font-family: 'Arial', sans-serif;
+}
+
+.pig-name {
+  margin-block: 0.5em;
+}
+
+.pig-age {
+  margin-block: 0.5em;
+}
+
+.radio {
+  visibility: hidden;
+}
+
+.pig {
+  display: none;
+}
+
+#pig1:checked ~ .pig-view .pig1,
+#pig1:checked ~ .pig-text .pig1,
+#pig1:checked ~ .buttons .pig1,
+#pig2:checked ~ .pig-view .pig2,
+#pig2:checked ~ .pig-text .pig2,
+#pig2:checked ~ .buttons .pig2,
+#pig3:checked ~ .pig-view .pig3,
+#pig3:checked ~ .pig-text .pig3,
+#pig3:checked ~ .buttons .pig3,
+#pig4:checked ~ .pig-view .pig4,
+#pig4:checked ~ .pig-text .pig4,
+#pig4:checked ~ .buttons .pig4,
+#pig5:checked ~ .pig-view .pig5,
+#pig5:checked ~ .pig-text .pig5,
+#pig5:checked ~ .buttons .pig5,
+#pig6:checked ~ .pig-view .pig6,
+#pig6:checked ~ .pig-text .pig6,
+#pig6:checked ~ .buttons .pig6,
+#pig7:checked ~ .pig-view .pig7,
+#pig7:checked ~ .pig-text .pig7,
+#pig7:checked ~ .buttons .pig7
+{
+  display: block;
+}
+
